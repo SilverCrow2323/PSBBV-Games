@@ -6,10 +6,18 @@
 namespace psbbv::games {
 namespace {
 
+bool boundedLength(const char* value, std::size_t capacity, std::size_t& length) noexcept {
+    if (value == nullptr) return false;
+    const void* terminator = std::memchr(value, '\\0', capacity);
+    if (terminator == nullptr) return false;
+    length = static_cast<const char*>(terminator) - value;
+    return true;
+}
+
 bool copyField(char* destination, std::size_t capacity, const char* source) noexcept {
-    if (source == nullptr) source = "";
-    const std::size_t length = std::strlen(source);
-    if (length >= capacity) return false;
+    if (source == nullptr) return false;
+    std::size_t length = 0;
+    if (!boundedLength(source, capacity, length)) return false;
     std::memcpy(destination, source, length + 1);
     return true;
 }
@@ -33,7 +41,9 @@ bool containsInsensitive(const char* text, const char* query) noexcept {
 Catalogue::Catalogue() noexcept : records_{}, size_(0) {}
 
 bool isValidTitleId(const char* titleId) noexcept {
-    if (titleId == nullptr || std::strlen(titleId) != 9) return false;
+    if (titleId == nullptr) return false;
+    const void* terminator = std::memchr(titleId, '\\0', TitleIdCapacity);
+    if (terminator == nullptr || static_cast<const char*>(terminator) - titleId != 9) return false;
     for (std::size_t i = 0; i < 9; ++i) {
         const unsigned char ch = static_cast<unsigned char>(titleId[i]);
         if (!std::isalnum(ch)) return false;
@@ -44,9 +54,10 @@ bool isValidTitleId(const char* titleId) noexcept {
 CatalogueError Catalogue::upsert(const GameRecord& record) noexcept {
     if (!isValidTitleId(record.titleId)) return CatalogueError::InvalidTitleId;
     if (record.title[0] == '\0') return CatalogueError::EmptyTitle;
-    if (std::strlen(record.title) >= TitleCapacity ||
-        std::strlen(record.category) >= CategoryCapacity ||
-        std::strlen(record.version) >= VersionCapacity) return CatalogueError::FieldTooLong;
+    std::size_t titleLength = 0, categoryLength = 0, versionLength = 0;
+    if (!boundedLength(record.title, TitleCapacity, titleLength) ||
+        !boundedLength(record.category, CategoryCapacity, categoryLength) ||
+        !boundedLength(record.version, VersionCapacity, versionLength)) return CatalogueError::FieldTooLong;
 
     std::size_t index = size_;
     for (std::size_t i = 0; i < size_; ++i) {
