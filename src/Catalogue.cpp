@@ -8,7 +8,7 @@ namespace {
 
 bool boundedLength(const char* value, std::size_t capacity, std::size_t& length) noexcept {
     if (value == nullptr) return false;
-    const void* terminator = std::memchr(value, '\\0', capacity);
+    const void* terminator = std::memchr(value, '\0', capacity);
     if (terminator == nullptr) return false;
     length = static_cast<const char*>(terminator) - value;
     return true;
@@ -42,7 +42,7 @@ Catalogue::Catalogue() noexcept : records_{}, size_(0) {}
 
 bool isValidTitleId(const char* titleId) noexcept {
     if (titleId == nullptr) return false;
-    const void* terminator = std::memchr(titleId, '\\0', TitleIdCapacity);
+    const void* terminator = std::memchr(titleId, '\0', TitleIdCapacity);
     if (terminator == nullptr || static_cast<const char*>(terminator) - titleId != 9) return false;
     for (std::size_t i = 0; i < 9; ++i) {
         const unsigned char ch = static_cast<unsigned char>(titleId[i]);
