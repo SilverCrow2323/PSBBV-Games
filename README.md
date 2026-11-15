@@ -37,4 +37,4 @@ Host parser and catalogue tests, malformed-metadata fixtures, path-safety tests,
 
 ## Status
 
-Repository bootstrap and product boundary only. Planned features are not yet implemented. English UI/docs and SPDW Factory identity are required.
+The first portable catalogue slice is implemented and covered by host tests: bounded metadata records, title-ID validation, unique upsert, search, favourites and sorting. Installed-title filesystem discovery, metadata-source parsing, artwork, Vita launching and return-to-shell lifecycle remain planned. English UI/docs and SPDW Factory identity are required.
