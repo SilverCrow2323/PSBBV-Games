@@ -1,0 +1,25 @@
+{
+  "manifestVersion": 1,
+  "id": "factory.spdw.psbbv.games",
+  "name": "PSBBV Games",
+  "version": "0.1.0",
+  "apiVersion": "1.0",
+  "description": "Installed game discovery, catalogue management and guarded title launching for PSBBV.",
+  "category": "games",
+  "platforms": [
+    "psvita"
+  ],
+  "capabilities": [
+    "games.catalog.read",
+    "games.title.launch",
+    "games.favorites.manage"
+  ],
+  "permissions": [
+    "storage.private",
+    "storage.shared.read"
+  ],
+  "availability": "planned",
+  "runtime": {
+    "kind": "builtin"
+  }
+}
