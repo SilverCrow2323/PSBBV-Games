@@ -6,13 +6,19 @@ on:
     paths:
       - "psbbv-node.json"
       - "schemas/**"
+      - "include/**"
+      - "src/**"
       - "tests/**"
+      - "CMakeLists.txt"
       - ".github/workflows/validate.yml"
   pull_request:
     paths:
       - "psbbv-node.json"
       - "schemas/**"
+      - "include/**"
+      - "src/**"
       - "tests/**"
+      - "CMakeLists.txt"
       - ".github/workflows/validate.yml"
   workflow_dispatch:
 
@@ -34,3 +40,16 @@ jobs:
         run: python -m pip install --disable-pip-version-check jsonschema==4.25.1
       - name: Validate schema and manifest
         run: python tests/validate_manifest.py
+
+  host-tests:
+    name: Build and test portable Games library
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build with warnings enabled
+        run: cmake --build build --parallel 2
+      - name: Run catalogue and metadata tests
+        run: ctest --test-dir build --output-on-failure

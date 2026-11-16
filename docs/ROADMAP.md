@@ -14,9 +14,9 @@
 
 ## Phase 1 — Installed-title discovery
 
-- [ ] Document supported Vita installed-title metadata sources with references to VitaSDK/system interfaces.
-- [ ] Add fixture corpus for valid, partial, malformed and adversarial metadata.
-- [ ] Implement a bounded parser for supported metadata formats.
+- [x] Document the conventional ux0:/app/<TITLE_ID>/sce_sys/param.sfo source and relevant VitaSDK interfaces.
+- [x] Add host fixtures for valid, partial, malformed and adversarial PARAM.SFO metadata.
+- [x] Implement a bounded, allocation-free parser for the supported PARAM.SFO string fields.
 - [ ] Map parsed records into the catalogue without following arbitrary paths or symlinks.
 - [ ] Add rescan, stale-record and duplicate-source handling.
 
