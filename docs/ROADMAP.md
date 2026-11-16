@@ -19,7 +19,8 @@
 - [x] Implement a bounded, allocation-free parser for the supported PARAM.SFO string fields.
 - [x] Map parsed records through an injected, bounded provider without following arbitrary paths or symlinks.
 - [x] Add transactional rescan, stale-record pruning and duplicate-source handling.
-- [ ] Implement the VitaSDK read-only adapter for the selected ux0:/app root.
+- [x] Implement the user-mode VitaSDK read-only adapter for the selected ux0:/app root.
+- [ ] Validate the adapter on a physical Vita, including absent/unmounted ux0, malformed entries and symlink fixtures.
 
 ## Phase 2 — Library experience
 
