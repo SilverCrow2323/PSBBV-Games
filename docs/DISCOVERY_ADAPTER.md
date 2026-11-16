@@ -40,4 +40,6 @@ Per-title read and parse failures are counted and skipped; they do not abort a c
 
 ## Not yet implemented
 
-There is no concrete VitaSDK filesystem provider in this change. The next device-side step must use `sceIoDopen` / `sceIoDread` / `sceIoDclose`, inspect file type and symlink attributes, and read a size-bounded `param.sfo` with user-mode I/O. No physical Vita scan has been performed. Launching games remains a separate interface and lifecycle project.
+The user-mode VitaSDK provider now lives in `src/vita/DiscoveryVita.cpp`. It opens only `ux0:/app`, enumerates direct children with `sceIoDopen` / `sceIoDread`, checks directory and metadata entry types, bounds PARAM.SFO to 16 KiB, rechecks the opened file descriptor and reads with `sceIoRead`. The provider is compiled separately from host tests and is linked against `SceIofilemgr_stub` for later Core integration.
+
+**Filesystem caveat:** VitaSDK's documented open flags do not expose a no-follow option. The adapter rejects symlinks from directory-entry metadata before opening and validates the opened descriptor, but a hostile concurrent rename between those operations is not proven race-free. This read-only adapter never writes or follows arbitrary recursive paths. No physical Vita scan has been performed. Launching games remains a separate interface and lifecycle project.
