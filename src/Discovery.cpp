@@ -97,6 +97,12 @@ DiscoveryReport discoverInstalledTitles(Catalogue& catalogue,
             continue;
         }
 
+        // Package metadata must never reset user-owned catalogue state.
+        if (const GameRecord* existing = staged.find(parsed.titleId)) {
+            parsed.favorite = existing->favorite;
+            parsed.lastPlayedUnix = existing->lastPlayedUnix;
+        }
+
         report.catalogueError = staged.upsert(parsed);
         if (report.catalogueError != CatalogueError::None) {
             report.error = DiscoveryError::CatalogueRejected;
