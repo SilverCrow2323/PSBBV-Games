@@ -129,8 +129,10 @@ DiscoverySource adapter(FakeSource& source) {
 
 int main() {
     Catalogue catalogue;
-    require(catalogue.upsert(record("PCSE00001", "Old title", true)) == CatalogueError::None,
-            "existing favourite inserted");
+    GameRecord existingFavorite = record("PCSE00001", "Old title", true);
+    existingFavorite.lastPlayedUnix = 123456;
+    require(catalogue.upsert(existingFavorite) == CatalogueError::None,
+            "existing favourite and play history inserted");
     require(catalogue.upsert(record("PCSE00002", "Stale title")) == CatalogueError::None,
             "stale record inserted");
 
@@ -159,6 +161,8 @@ int main() {
     require(std::strcmp(catalogue.find("PCSE00001")->title, "Updated title") == 0,
             "metadata refresh updates title");
     require(catalogue.find("PCSE00001")->favorite, "existing user favourite is preserved");
+    require(catalogue.find("PCSE00001")->lastPlayedUnix == 123456,
+            "existing last-played timestamp is preserved");
     require(catalogue.find("PCSE00003") != nullptr, "new installed title added");
     require(catalogue.find("PCSE00002") == nullptr, "stale title removed");
 
