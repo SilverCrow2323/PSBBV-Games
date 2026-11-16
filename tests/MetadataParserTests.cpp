@@ -98,6 +98,21 @@ int main() {
     require(parseParamSfo(truncated.data(), truncated.size(), unchanged).error ==
             MetadataError::InvalidValue, "out-of-range value rejected");
 
+    auto oversizedCapacity = valid;
+    write32(oversizedCapacity, 20 + 8, 0xFFFFFFF0);
+    require(parseParamSfo(oversizedCapacity.data(), oversizedCapacity.size(), unchanged).error ==
+            MetadataError::InvalidValue, "out-of-range reserved value capacity rejected");
+
+    auto unsupportedVersion = valid;
+    write32(unsupportedVersion, 4, 0x00000201);
+    require(parseParamSfo(unsupportedVersion.data(), unsupportedVersion.size(), unchanged).error ==
+            MetadataError::UnsupportedVersion, "unsupported PSF version rejected");
+
+    std::vector<Entry> tooMany(129, {"IGNORED", "x"});
+    const auto excessiveEntries = makeSfo(tooMany);
+    require(parseParamSfo(excessiveEntries.data(), excessiveEntries.size(), unchanged).error ==
+            MetadataError::TooManyEntries, "excessive entry count rejected");
+
     auto duplicate = validFields();
     duplicate.push_back({"TITLE_ID", "PCSE00002"});
     const auto duplicateSfo = makeSfo(duplicate);
