@@ -29,6 +29,15 @@ bool isRegularFile(const SceIoStat& stat) noexcept {
            (stat.st_attr & SCE_SO_IFMT) == SCE_SO_IFREG;
 }
 
+bool entryNameEquals(const SceIoDirent& entry, const char* expected) noexcept {
+    const void* terminator = std::memchr(entry.d_name, '\\0', sizeof(entry.d_name));
+    if (terminator == nullptr) return false;
+    const std::size_t length = static_cast<const char*>(terminator) - entry.d_name;
+    const std::size_t expectedLength = std::strlen(expected);
+    return length == expectedLength &&
+           std::memcmp(entry.d_name, expected, expectedLength) == 0;
+}
+
 int openRoot(void* opaque) noexcept {
     auto& context = *static_cast<VitaDiscoveryContext*>(opaque);
     if (context.directoryFd >= 0) return -1;
@@ -75,7 +84,7 @@ bool findSafeDirectory(const char* path, const char* wanted) noexcept {
         SceIoDirent entry{};
         const int result = sceIoDread(fd, &entry);
         if (result <= 0) break;
-        if (std::strcmp(entry.d_name, wanted) == 0) {
+        if (entryNameEquals(entry, wanted)) {
             found = isDirectory(entry.d_stat) && !isSymlink(entry.d_stat);
             break;
         }
@@ -92,7 +101,7 @@ bool findSafeMetadata(const char* path, SceOff& size) noexcept {
         SceIoDirent entry{};
         const int result = sceIoDread(fd, &entry);
         if (result <= 0) break;
-        if (std::strcmp(entry.d_name, ParamSfoName) == 0) {
+        if (entryNameEquals(entry, ParamSfoName)) {
             if (isRegularFile(entry.d_stat) && !isSymlink(entry.d_stat) &&
                 entry.d_stat.st_size > 0 &&
                 entry.d_stat.st_size <= static_cast<SceOff>(MaxParamSfoBytes)) {
