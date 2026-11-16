@@ -88,6 +88,7 @@ MetadataParseResult parseParamSfo(const std::uint8_t* bytes,
         const std::size_t keyLength = static_cast<const std::uint8_t*>(keyEnd) - keyStart;
 
         if (valueLength > valueCapacity || valueOffset > size - dataTableOffset ||
+            valueCapacity > size - dataTableOffset - valueOffset ||
             valueLength > size - dataTableOffset - valueOffset)
             return {MetadataError::InvalidValue, i};
 
