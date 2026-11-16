@@ -30,7 +30,7 @@ bool isRegularFile(const SceIoStat& stat) noexcept {
 }
 
 bool entryNameEquals(const SceIoDirent& entry, const char* expected) noexcept {
-    const void* terminator = std::memchr(entry.d_name, '\\0', sizeof(entry.d_name));
+    const void* terminator = std::memchr(entry.d_name, '\0', sizeof(entry.d_name));
     if (terminator == nullptr) return false;
     const std::size_t length = static_cast<const char*>(terminator) - entry.d_name;
     const std::size_t expectedLength = std::strlen(expected);
