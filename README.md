@@ -37,4 +37,4 @@ Host parser and catalogue tests, malformed-metadata fixtures, path-safety tests,
 
 ## Status
 
-The first portable catalogue slice is implemented and covered by host tests: bounded metadata records, title-ID validation, unique upsert, search, favourites and sorting. Installed-title filesystem discovery, metadata-source parsing, artwork, Vita launching and return-to-shell lifecycle remain planned. English UI/docs and SPDW Factory identity are required.
+The portable catalogue and a bounded PARAM.SFO metadata parser are implemented with host fixtures. The parser extracts TITLE_ID, TITLE, CATEGORY and APP_VER without opening paths or importing user state. The Vita filesystem enumerator, artwork, title launch and return-to-shell lifecycle remain planned pending VitaSDK integration and physical-device validation. English UI/docs and SPDW Factory identity are required.
