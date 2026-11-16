@@ -29,7 +29,8 @@ struct DiscoverySource final {
     int (*next)(void*, char* name, std::size_t capacity, std::size_t* nameLength,
                 bool* isDirectory, bool* isSymlink) noexcept = nullptr;
     // readParamSfo: zero = read completed; nonzero = this title could not be read.
-    // The adapter must stay inside its configured application root.
+    // The adapter must stay inside its configured root, stat before reading,
+    // reject non-regular/symlink files and never write beyond output capacity.
     int (*readParamSfo)(void*, const char* titleId, std::uint8_t* output,
                         std::size_t capacity, std::size_t* bytesRead,
                         bool* isRegularFile, bool* isSymlink) noexcept = nullptr;
