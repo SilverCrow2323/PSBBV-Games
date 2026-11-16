@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 enable_testing()
-add_library(psbbv_games_catalogue src/Catalogue.cpp src/MetadataParser.cpp)
+add_library(psbbv_games_catalogue src/Catalogue.cpp src/MetadataParser.cpp src/Discovery.cpp)
 target_include_directories(psbbv_games_catalogue PUBLIC include)
 target_compile_options(psbbv_games_catalogue PRIVATE -Wall -Wextra -Wpedantic)
 
@@ -19,3 +19,8 @@ add_executable(psbbv_games_metadata_tests tests/MetadataParserTests.cpp)
 target_link_libraries(psbbv_games_metadata_tests PRIVATE psbbv_games_catalogue)
 target_compile_options(psbbv_games_metadata_tests PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME psbbv_games_metadata COMMAND psbbv_games_metadata_tests)
+
+add_executable(psbbv_games_discovery_tests tests/DiscoveryTests.cpp)
+target_link_libraries(psbbv_games_discovery_tests PRIVATE psbbv_games_catalogue)
+target_compile_options(psbbv_games_discovery_tests PRIVATE -Wall -Wextra -Wpedantic)
+add_test(NAME psbbv_games_discovery COMMAND psbbv_games_discovery_tests)
