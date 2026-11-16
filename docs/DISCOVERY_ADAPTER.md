@@ -17,7 +17,7 @@ See [VitaSDK directory iteration](https://docs.vitasdk.org/group__SceDirEntUser.
 - `open` establishes access to the one configured root.
 - `next` returns one direct child name and its directory/symlink attributes; it must not recurse.
 - The coordinator accepts only exactly nine alphanumeric title-ID names.
-- `readParamSfo` receives only a validated title ID, and must resolve it beneath the configured root. It reports whether the metadata path is a regular file and whether it is a symlink.
+- `readParamSfo` receives only a validated title ID, and must resolve it beneath the configured root. It must stat before reading, reject non-regular files and symlinks, refuse files larger than the supplied capacity, and never write beyond that capacity. It reports the final byte count and file attributes.
 - `close` is called after every successful open, including an interrupted enumeration.
 
 ## Hard limits and behavior
