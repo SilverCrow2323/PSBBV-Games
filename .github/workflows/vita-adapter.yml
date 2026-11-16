@@ -1,0 +1,35 @@
+name: VitaSDK Adapter Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "CMakeLists.txt"
+      - "include/**"
+      - "src/**"
+      - ".github/workflows/vita-adapter.yml"
+  pull_request:
+    paths:
+      - "CMakeLists.txt"
+      - "include/**"
+      - "src/**"
+      - ".github/workflows/vita-adapter.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vita-adapter:
+    name: Compile user-mode Vita filesystem adapter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Build with pinned VitaSDK
+        run: |
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -w /workspace \
+            vitasdk/vitasdk:2026.08 \
+            sh -lc 'cmake -S . -B build-vita -DPSBBV_GAMES_BUILD_VITA_ADAPTER=ON -DCMAKE_BUILD_TYPE=Release && cmake --build build-vita --target psbbv_games_vita_adapter --parallel'
