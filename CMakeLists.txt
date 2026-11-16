@@ -37,7 +37,7 @@ target_compile_options(psbbv_games_discovery_tests PRIVATE -Wall -Wextra -Wpedan
 add_test(NAME psbbv_games_discovery COMMAND psbbv_games_discovery_tests)
 
 if(PSBBV_GAMES_BUILD_VITA_ADAPTER)
-    include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+    include("$ENV{VITASDK}/share/vita.cmake")
     add_library(psbbv_games_vita_adapter STATIC src/vita/DiscoveryVita.cpp)
     target_link_libraries(psbbv_games_vita_adapter PUBLIC psbbv_games_catalogue)
     target_compile_options(psbbv_games_vita_adapter PRIVATE -Wall -Wextra -Wpedantic)
