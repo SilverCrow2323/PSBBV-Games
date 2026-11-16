@@ -32,4 +32,4 @@ jobs:
             -v "$PWD:/workspace" \
             -w /workspace \
             vitasdk/vitasdk:2026.08 \
-            sh -lc 'cmake -S . -B build-vita -DPSBBV_GAMES_BUILD_VITA_ADAPTER=ON -DCMAKE_BUILD_TYPE=Release && cmake --build build-vita --target psbbv_games_vita_adapter --parallel'
+            sh -lc 'cmake -S . -B build-vita -DPSBBV_GAMES_BUILD_VITA_ADAPTER=ON -DPSBBV_GAMES_BUILD_HOST_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build build-vita --target psbbv_games_vita_adapter --parallel'
