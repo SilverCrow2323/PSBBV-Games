@@ -37,4 +37,4 @@ Host parser and catalogue tests, malformed-metadata fixtures, path-safety tests,
 
 ## Status
 
-The portable catalogue and a bounded PARAM.SFO metadata parser are implemented with host fixtures. The parser extracts TITLE_ID, TITLE, CATEGORY and APP_VER without opening paths or importing user state. The Vita filesystem enumerator, artwork, title launch and return-to-shell lifecycle remain planned pending VitaSDK integration and physical-device validation. English UI/docs and SPDW Factory identity are required.
+The portable catalogue, bounded PARAM.SFO parser and provider-driven discovery coordinator are implemented with host fixtures. Discovery validates title IDs, rejects symlinked directories/files, bounds reads, preserves favourites, prunes stale records only after a complete scan and leaves the catalogue untouched after enumeration failure. The VitaSDK filesystem adapter, artwork, title launch and return-to-shell lifecycle remain planned pending device integration and physical validation. English UI/docs and SPDW Factory identity are required.

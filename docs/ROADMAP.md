@@ -17,8 +17,9 @@
 - [x] Document the conventional ux0:/app/<TITLE_ID>/sce_sys/param.sfo source and relevant VitaSDK interfaces.
 - [x] Add host fixtures for valid, partial, malformed and adversarial PARAM.SFO metadata.
 - [x] Implement a bounded, allocation-free parser for the supported PARAM.SFO string fields.
-- [ ] Map parsed records into the catalogue without following arbitrary paths or symlinks.
-- [ ] Add rescan, stale-record and duplicate-source handling.
+- [x] Map parsed records through an injected, bounded provider without following arbitrary paths or symlinks.
+- [x] Add transactional rescan, stale-record pruning and duplicate-source handling.
+- [ ] Implement the VitaSDK read-only adapter for the selected ux0:/app root.
 
 ## Phase 2 — Library experience
 
