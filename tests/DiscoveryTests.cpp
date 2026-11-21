@@ -139,6 +139,9 @@ int main() {
     FakeSource fake;
     fake.items.push_back({"PCSE00001", true, false, true, false, false,
                           makeSfo("PCSE00001", "Updated title")});
+    // Duplicate directory entries must not cause a second metadata read/upsert.
+    fake.items.push_back({"PCSE00001", true, false, true, false, false,
+                          makeSfo("PCSE00001", "Duplicate must be ignored")});
     fake.items.push_back({"PCSE00003", true, false, true, false, false,
                           makeSfo("PCSE00003", "New title")});
     fake.items.push_back({"../bad-id", true, false, true, false, false, {}});
@@ -153,7 +156,7 @@ int main() {
     require(report.error == DiscoveryError::None, "complete scan succeeds");
     require(fake.opened && fake.closed, "source is closed after scan");
     require(report.acceptedRecords == 2, "two valid metadata records accepted");
-    require(report.skippedEntries == 2, "invalid and symlink directories skipped");
+    require(report.skippedEntries == 3, "invalid, symlink and duplicate directory entries skipped");
     require(report.malformedMetadata == 2, "symlink and malformed metadata rejected");
     require(report.unreadableMetadata == 1, "read error counted without aborting scan");
     require(report.removedStaleRecords == 1, "stale record removed after complete scan");
