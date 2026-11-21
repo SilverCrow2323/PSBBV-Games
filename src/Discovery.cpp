@@ -61,14 +61,18 @@ DiscoveryReport discoverInstalledTitles(Catalogue& catalogue,
             continue;
         }
 
-        if (!wasSeen(seen, seenCount, name)) {
-            if (seenCount == MaxGames) {
-                report.error = DiscoveryError::TooManyTitles;
-                break;
-            }
-            std::memcpy(seen[seenCount], name, TitleIdCapacity);
-            ++seenCount;
+        // A directory iterator should not expose the same title twice. Keep
+        // the first occurrence deterministic and avoid repeated SFO reads/upserts.
+        if (wasSeen(seen, seenCount, name)) {
+            ++report.skippedEntries;
+            continue;
         }
+        if (seenCount == MaxGames) {
+            report.error = DiscoveryError::TooManyTitles;
+            break;
+        }
+        std::memcpy(seen[seenCount], name, TitleIdCapacity);
+        ++seenCount;
 
         std::size_t bytesRead = 0;
         bool isRegularFile = false;
