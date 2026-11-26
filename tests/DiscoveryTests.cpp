@@ -182,5 +182,17 @@ int main() {
 
     require(discoverInstalledTitles(unchanged, {}, scratch, sizeof(scratch)).error ==
             DiscoveryError::InvalidArgument, "missing source callbacks rejected");
+    FakeSource oversized;
+    for (std::size_t i = 0; i < MaxDiscoveryDirectoryEntries + 1; ++i)
+        oversized.items.push_back({"not-a-title", true, false, true, false, false, {}});
+    const DiscoveryReport overflow = discoverInstalledTitles(unchanged, adapter(oversized),
+                                                               scratch, sizeof(scratch));
+    require(overflow.error == DiscoveryError::TooManyDirectoryEntries,
+            "oversized directory is rejected at the configured bound");
+    require(overflow.directoryEntries == MaxDiscoveryDirectoryEntries + 1,
+            "directory entry count reports the first rejected entry");
+    require(oversized.closed, "source closes after entry-count overflow");
+    require(unchanged.size() == 1 && unchanged.find("PCSE00009") != nullptr,
+            "overflow scan leaves original catalogue untouched");
     std::cout << "PSBBV Games installed-title discovery: all checks passed.\n";
 }
