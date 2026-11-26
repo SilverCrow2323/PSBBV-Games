@@ -183,6 +183,18 @@ int main() {
     require(unchanged.size() == 1 && unchanged.find("PCSE00009") != nullptr,
             "failed scan leaves original catalogue untouched");
 
+    FakeSource excessive;
+    excessive.items.reserve(MaxDiscoveryDirectoryEntries + 1);
+    for (std::size_t i = 0; i <= MaxDiscoveryDirectoryEntries; ++i)
+        excessive.items.push_back({"x", true, false, true, false, false, {}});
+    const DiscoveryReport bounded = discoverInstalledTitles(
+        unchanged, adapter(excessive), scratch, sizeof(scratch));
+    require(bounded.error == DiscoveryError::TooManyDirectoryEntries,
+            "directory enumeration limit is enforced");
+    require(excessive.closed, "source closes after enumeration limit");
+    require(unchanged.size() == 1 && unchanged.find("PCSE00009") != nullptr,
+            "over-limit scan leaves original catalogue untouched");
+
     require(discoverInstalledTitles(unchanged, {}, scratch, sizeof(scratch)).error ==
             DiscoveryError::InvalidArgument, "missing source callbacks rejected");
     std::cout << "PSBBV Games installed-title discovery: all checks passed.\n";
